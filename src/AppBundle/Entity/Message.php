@@ -26,7 +26,12 @@ class Message
     /**
      * @ORM\ManyToOne(targetEntity="Chat", inversedBy="messages")
      */
-    protected $message;
+    protected $chat;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="messages")
+     */
+    protected $user;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -135,25 +140,48 @@ class Message
     }
 
     /**
-     * Set message
+     * Set Chat
      *
-     * @param \AppBundle\Entity\Chat $message
+     * @param \AppBundle\Entity\Chat $chat
      * @return Message
      */
-    public function setMessage(\AppBundle\Entity\Chat $message = null)
+    public function setChat(\AppBundle\Entity\Chat $chat = null)
     {
-        $this->message = $message;
+        $this->chat = $chat;
 
         return $this;
     }
 
     /**
-     * Get message
+     * Get chat
      *
      * @return \AppBundle\Entity\Chat 
      */
-    public function getMessage()
+    public function getChat()
     {
-        return $this->message;
+        return $this->chat;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \AppBundle\Entity\User $user
+     * @return Message
+     */
+    public function setUser(\AppBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }
