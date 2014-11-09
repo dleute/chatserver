@@ -21,6 +21,7 @@
 !bin/console
 !bin/symfony_requirements
 /vendor/
+/components/
 
 # Assets and user uploads
 /web/bundles/
@@ -38,3 +39,4 @@
 
 # Other
 /build/
+/web/assetic

@@ -1,0 +1,100 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-4">
+            <ul class="nav nav-pills nav-stacked" role="tablist" id="myTab">
+                {#<li class="active"><a href="#">Home <span class="badge">24</span></a></li>#}
+                <li class="active"><a  href="#home" role="tab" data-toggle="tab">Home <span class="badge pull-right">4</span></a></li>
+                <li><a href="#profile" role="tab" data-toggle="tab">Profile <span class="badge pull-right">14</span></a></li>
+                <li><a href="#messages" role="tab" data-toggle="tab">Messages <span class="badge pull-right">11</span></a></li>
+                <li><a href="#settings" role="tab" data-toggle="tab">Settings</a></li>
+            </ul>
+            <div class="list-group" role="tablist" id="myTab2">
+                {#<li class="list-group-item active" role="presentation">#}
+
+
+
+                {#</li>#}
+                {#<li class="list-group-item" role="presentation">#}
+
+
+                {#</li>#}
+                {#<li class="list-group-item" role="presentation">#}
+
+
+                {#</li>#}
+                {#<li class="list-group-item" role="presentation">#}
+
+                {#</li>#}
+                {#</ul>#}
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="tab-content" id="myTabContent">
+                <div role="tabpanel" class="tab-pane fade in active" id="home">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Derrek Leute</h3>
+                        </div>
+                        <div class="panel-body">
+                            {#<span class="label label-default">Derrek</span>#}
+                            Look at this!
+                        </div>
+
+                    </div>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Emily Leute</h3>
+                        </div>
+                        <div class="panel-body">
+                            {#<span class="label label-default">Derrek</span>#}
+                            What's up?
+                        </div>
+
+                    </div>
+
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="profile">Profile</div>
+                <div role="tabpanel" class="tab-pane fade" id="messages">Messages</div>
+                <div role="tabpanel" class="tab-pane fade" id="settings">Settings</div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        $(function () {
+            $('#myTab a:first').tab('show');
+            $("#myTab").append("<li><a href=\"#beef\" role=\"tab\" data-toggle=\"tab\">Beef</a></li>");
+            $("#myTabContent").append("<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"beef\">Beef</div>");
+        })
+    </script>
+
+    <script>
+        var conn = new ab.Session('ws://localhost:8080',
+                function() {
+                    conn.subscribe('kittensCategory', function(topic, data) {
+                        // This is where you would add the new article to the DOM (beyond the scope of this tutorial)
+                        console.log('New article published to category "' + topic + '" : ' + data.title);
+
+                    });
+                },
+                function() {
+                    console.warn('WebSocket connection closed');
+                },
+                {'skipSubprotocolCheck': true}
+        );
+
+        function addChat() {
+        $("myTab").append("<a class=\"list-group-item\" href=\"#beef\" role=\"tab\" data-toggle=\"tab\">Beef</a>");
+////            $( "myTab").append( "<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"beef\">Beef</div>");
+//            $( "myTab").append( "<div>boo</div>");
+//
+        }
+    </script>
+
+{% endblock %}

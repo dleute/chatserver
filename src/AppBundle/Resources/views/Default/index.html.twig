@@ -1,0 +1,13 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+
+    <div class="jumbotron">
+        <h2>Welcome to Chat Server</h2>
+        <p>This is a real time socket based chat experiment.</p>
+        <p>
+            <a class="btn btn-lg btn-primary" href="{{ path("fos_user_security_login") }}" role="button">Login to your account</a>
+        </p>
+    </div>
+
+{% endblock %}
