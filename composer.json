@@ -8,7 +8,7 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": "2.6.x-dev",
+        "symfony/symfony": "2.6.0-BETA1",
         "doctrine/orm": "~2.2,>=2.2.3",
         "doctrine/doctrine-bundle": "~1.2",
         "twig/extensions": "~1.0",
@@ -28,7 +28,8 @@
         "cboden/ratchet": "0.4.x-dev",
         "react/zmq": "~0.3",
         "ivaynberg/select2": "~3.5",
-        "phpunit/phpunit": "~4.3"
+        "phpunit/phpunit": "~4.3",
+        "doctrine/doctrine-fixtures-bundle": "~2.2"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",

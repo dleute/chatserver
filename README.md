@@ -42,8 +42,6 @@ In this guide composer is installed globally by moving it into the path as `comp
 * Copy app/config/parameters.yml.dist to app/config/parameters.yml
 * Edit app/config/parameters.yml for your db systems
 
-#### Deploy
-
 ### Usage
 
 chatserver.allofzero.com is the domain used in this example. Please replace with your own domain (or use it in hosts which may be easier)
@@ -53,7 +51,7 @@ chatdeploy.allofzero.com is the domain used for live deployment.
 
 For usage and testing a fixtures file is included that creates a few users for you.
 
-COMPLETE THIS
+`./app/console doctrine:fixtures:load` - WARNING: this will destroy the current database and re-populate it
 
 #### Creating users manually
 
@@ -76,6 +74,24 @@ If everything is configured, going here will show you the welcome page:
 * go to `http://chatserver.allofzero.com/app_dev.php/`
 
 You should be able to login with one of the generated users.
+
+### Testing
+
+Two types of testing are implemented. Unit and Functional. Unit testing was only used for the core functionality of the socket process. This is because 99% of the code is based on 3rd party libraries that are unit tested independently. So doing full unit test coverage is both redundant and a waste of energy.
+
+Functional testing is used to test the client html interface. This effectively does everything the unit testing does and more.
+
+#### Unit Testing
+
+Run the following command to run all unit tests:
+
+`./vendor/phpunit/phpunit/phpunit -c app`
+
+This should be entirely self contained and work once the environment is functional.
+
+#### Functional Testing
+
+Functional testing is quite a bit more involved. It will require configuring a javascript compatible test driver. Doing all of this is beyond the scope of this document.
 
 ### Deploy
 

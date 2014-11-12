@@ -6,7 +6,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use AppBundle\Entity\Chat;
 use AppBundle\Entity\Message;
 use AppBundle\Entity\Subscribe;
-use AppBundle\Service\ChatPusher;
 use \ZMQContext;
 use \ZMQ;
 use JMS\Serializer\SerializerInterface;
@@ -31,48 +30,46 @@ class ModelPushListener
         $entity = $args->getEntity();
         $em = $args->getEntityManager();
 
-        $context = new ZMQContext();
-        $socket = $context->getSocket(ZMQ::SOCKET_PUSH, 'my pusher');
-        $socket->connect("tcp://localhost:5555");
+        if ($message = $this->getMessage($entity)) {
+            $context = new ZMQContext();
+            $socket = $context->getSocket(ZMQ::SOCKET_PUSH, 'my pusher');
+            $socket->connect("tcp://localhost:5555");
 
-        if ($entity instanceof Chat) {
-            // Currently there is no reason to do anything with Chat. Adding a subscribe is what adds it to the client.
+            $socket->send(json_encode($message));
         }
+    }
+
+    public function getMessage($entity) {
+        $usernames = array();
+        $content = null;
+        $chat = null;
+        $type = null;
+
 
         if ($entity instanceof Message) {
-            // Will be sent to all connected subscribers of that chat
-            $chat = $entity->getChat();
-
-            $usernames = array();
-
-            /** @var Subscribe $s */
-            foreach ($chat->getSubscribes() as $s) {
-                $usernames[] = $s->getUser()->getUsername();
-            }
-
             $content = array("message" => $entity);
-            $message = array("broadcast" => "message", "content" => $this->serializer->serialize($content, "json"), "usernames" => $usernames);
-
-            $socket->send(json_encode($message));
+            $chat = $entity->getChat();
+            $type = "message";
         }
 
-        /** @var Subscribe $entity */
         if ($entity instanceof Subscribe) {
-            // Sends a chat message. This will happen on new chats for the chat creator and when users are invited
-
+            $content = array("subscribe" => $entity);
             $chat = $entity->getChat();
+            $type = "subscribe";
+        }
 
-            $usernames = array();
+        if ($chat) {
 
             /** @var Subscribe $s */
             foreach ($chat->getSubscribes() as $s) {
                 $usernames[] = $s->getUser()->getUsername();
             }
 
-            $content = array("subscribe" => $entity);
-            $message = array("broadcast" => "subscribe", "content" => $this->serializer->serialize($content, "json"), "usernames" => $usernames);
+            $message = array("broadcast" => $type, "content" => $this->serializer->serialize($content, "json"), "usernames" => $usernames);
 
-            $socket->send(json_encode($message));
+            return $message;
+        } else {
+            return false;
         }
     }
 }
