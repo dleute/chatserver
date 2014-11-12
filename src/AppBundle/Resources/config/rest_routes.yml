@@ -1,0 +1,19 @@
+chats:
+    type:     rest
+    resource: AppBundle\Controller\Rest\ChatController
+    name_prefix: api_
+
+subscribes:
+    type:     rest
+    resource: AppBundle\Controller\Rest\SubscribeController
+    name_prefix: api_
+
+#subscribes:
+#    type:     rest
+#    resource: AppBundle\Controller\Rest\UserController
+#    name_prefix: api_
+
+messages:
+    type:     rest
+    resource: AppBundle\Controller\Rest\MessageController
+    name_prefix: api_

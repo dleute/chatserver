@@ -3,11 +3,15 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use JMS\SerializerBundle\Annotation as JMS;
+use JMS\Serializer\Annotation as Ser;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="message")
  * @ORM\HasLifecycleCallbacks
+ * @Ser\ExclusionPolicy("all")
  */
 class Message
 {
@@ -15,26 +19,33 @@ class Message
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Ser\Expose
      */
     protected $id;
 
     /**
      * @ORM\Column(type="text")
+     * @Ser\Expose
+     * @Assert\NotBlank()
      */
     protected $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="Chat", inversedBy="messages")
+     * @Ser\Expose
      */
     protected $chat;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="messages")
+     * @Ser\Expose
      */
     protected $user;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Ser\Expose
+     * @Ser\Type("DateTime<'Y-m-d h:i:s a'>")
      */
     protected $created_at;
 
@@ -109,7 +120,7 @@ class Message
     /**
      * Get created_at
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {

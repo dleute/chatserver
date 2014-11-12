@@ -13,7 +13,7 @@
 {% endblock %}
 
     {% block javascripts %}
-        {% javascripts '@chatserver_js' filter='?yui_js' combine=true
+        {% javascripts '@chatserver_js' combine=true
         output='js/main.js' %}
         <script src="{{ asset_url }}"></script>
         {% endjavascripts %}

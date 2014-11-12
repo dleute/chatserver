@@ -2,84 +2,305 @@
 
 {% block body %}
 
+    {#<div class="row">#}
+        {#<div class="col-md-12">#}
+            {#{{ form(form) }}#}
+        {#</div>#}
+    {#</div>#}
     <div class="row">
-        <div class="col-md-4">
-            <ul class="nav nav-pills nav-stacked" role="tablist" id="myTab">
-                {#<li class="active"><a href="#">Home <span class="badge">24</span></a></li>#}
-                <li class="active"><a  href="#home" role="tab" data-toggle="tab">Home <span class="badge pull-right">4</span></a></li>
-                <li><a href="#profile" role="tab" data-toggle="tab">Profile <span class="badge pull-right">14</span></a></li>
-                <li><a href="#messages" role="tab" data-toggle="tab">Messages <span class="badge pull-right">11</span></a></li>
-                <li><a href="#settings" role="tab" data-toggle="tab">Settings</a></li>
-            </ul>
-            <div class="list-group" role="tablist" id="myTab2">
-                {#<li class="list-group-item active" role="presentation">#}
-
-
-
-                {#</li>#}
-                {#<li class="list-group-item" role="presentation">#}
-
-
-                {#</li>#}
-                {#<li class="list-group-item" role="presentation">#}
-
-
-                {#</li>#}
-                {#<li class="list-group-item" role="presentation">#}
-
-                {#</li>#}
-                {#</ul>#}
+        <div class="col-md-4" id="chatsColumn">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#chatModal">New Chat</button>
+                </div>
+                <div class="panel-body" id="chatsList">
+                    <ul class="nav nav-pills nav-stacked" role="tablist" id="chatTab">
+                    </ul>
+                </div>
             </div>
         </div>
 
-        <div class="col-md-8">
-            <div class="tab-content" id="myTabContent">
-                <div role="tabpanel" class="tab-pane fade in active" id="home">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Derrek Leute</h3>
-                        </div>
-                        <div class="panel-body">
-                            {#<span class="label label-default">Derrek</span>#}
-                            Look at this!
-                        </div>
-
-                    </div>
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Emily Leute</h3>
-                        </div>
-                        <div class="panel-body">
-                            {#<span class="label label-default">Derrek</span>#}
-                            What's up?
-                        </div>
-
-                    </div>
-
+        <div class="col-md-8" id="messagesColumn">
+            <div class="row-fluid">
+                <div class="tab-content" id="chatTabContent" id="messagesList">
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="profile">Profile</div>
-                <div role="tabpanel" class="tab-pane fade" id="messages">Messages</div>
-                <div role="tabpanel" class="tab-pane fade" id="settings">Settings</div>
             </div>
         </div>
 
 
     </div>
 
+    <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="chatModalLabel">Create a New Chat</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal createChatForm" role="form" id="createChatForm">
+                        <div class="form-group">
+                            <label for="newchat_name" class="col-sm-3 control-label">Chat Name</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="name" class="form-control" id="newchat_name" placeholder="Chat Name">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button id="createChatButton" type="button" class="btn btn-primary" data-loading-text="Loading..." autocomplete="off">Create Chat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="userModalLabel">Invite User</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal inviteUserForm" role="form" id="inviteUserForm">
+                        <div class="form-group">
+                            <input type="hidden" name="chat" value=""/>
+                            <label for="inviteuser_username" class="col-sm-3 control-label">Username</label>
+                            <div class="col-sm-9">
+                                <select id="inviteuser_username" name="user" class="form-control">
+                                    <option value="">Select a user</option>
+                                    {% for u in users %}
+                                        <option value="{{ u.id }}">{{ u.username }}</option>
+                                    {% endfor %}
+                                </select>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button id="inviteUserButton" type="button" class="btn btn-primary" data-loading-text="Loading..." autocomplete="off">Invite Users</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        $(function () {
-            $('#myTab a:first').tab('show');
-            $("#myTab").append("<li><a href=\"#beef\" role=\"tab\" data-toggle=\"tab\">Beef</a></li>");
-            $("#myTabContent").append("<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"beef\">Beef</div>");
-        })
+
+        function clearForm(form) {
+            var formElement = form;
+
+            // Remove existing help blocks displaying errors
+            formElement.find('.help-block').remove();
+
+            formElement.find('.has-error').removeClass('has-error');
+
+//            formElement.find('input').val("");
+        }
+
+        function displayFormError(form,json) {
+
+            console.log('foots balls ' + form + " " + json);
+
+            var formElement = form;
+
+            // Remove existing help blocks displaying errors
+            formElement.find('.help-block').remove();
+
+            formElement.find('.has-error').removeClass('has-error');
+
+            if (json.hasOwnProperty('errors')) {
+            $.each(json.errors.children, function(k, v) {
+                console.log( "dorf " + k + " " + v);
+                $.each(v, function(e,ev) {
+                    $.each(ev, function(m,me) {
+                        var input = formElement.find('[name=' + k + ']');
+                        input.after('<p class="help-block">' + me + '</p>');
+                        input.parent().parent().addClass('has-error');
+                        console.log(input + " " + k + " foot " + me);
+                    })
+                });
+            });
+            }
+//            console.log(json.code + " " + xhr.responseJSON);
+        }
+
+//        $('#inviteuser_username').select2();
+
+        $(function() {
+
+            $('#userModal').on('show.bs.modal', function (e) {
+                var chat_id = $(e.relatedTarget).data('chat-id');
+                $('#userModal').find('input[name=chat]').val(chat_id);
+            })
+
+            $(document).on("submit", "form", function(e){
+                e.preventDefault();
+//                alert(e.target);
+//                if (e.target.hasClass("createChatForm")) {
+//
+//                    $("#createChatButton").click();
+//                } else if (e.target.hasClass("inviteUserForm")) {
+//                    $("#inviteUserButton").click();
+//                } else if (e.target.hasClass("sendMessageForm")) {
+//                    $(e.target).find("button").click();
+//                }
+//                    $("#inviteUserButton").click();
+//                $(this).find("button").click();
+//                alert('it works!');
+//                return  false;
+            });
+
+//            $("form").on('submit',function(e) {
+//                e.preventDefault();
+
+//                $("#createChatButton").click();
+//            });
+
+//            $(".sendMessageForm").on('submit',function(e) {
+//                e.preventDefault();
+//                $("#createChatButton").click();
+//            });
+
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: "{{ path('api_get_chats') }}",
+                dataType: "json",
+                success: function(data, status, xhr){
+                    console.log('flow initial load chats: ' + xhr.responseText);
+                    $.each(xhr.responseJSON.chats, function(i,chat) {
+                        addChat(chat);
+                    });
+                    $('#chatTab a:first').tab('show');
+
+                },
+                error: function(xhr, status, errorThrown){
+                    console.log('flow initial load chats failed: ' + xhr.responseText);
+                }
+            });
+
+            // Watches for new chat button presses
+            $(document).on("click", "#createChatButton", function(event){
+                event.preventDefault();
+                var $btn = $(this).button('loading');
+
+                var raw = $('#createChatForm').serializeJSON();
+                var object = { chat: raw };
+                var json = JSON.stringify(object);
+
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: "{{ path("api_post_chat") }}",
+                    data: json,
+                    dataType: "json",
+                    success: function(data, status, xhr){
+                        console.log('flow ' + data);
+                        $btn.button('reset');
+                        $('#chatModal').modal('hide');
+                    },
+                    error: function(xhr, status, errorThrown){
+                        console.log(jQuery.parseJSON(xhr.responseText));
+                        displayFormError($('#createChatForm'), xhr.responseJSON);
+                        $btn.button('reset');
+                    }
+                });
+
+                console.log ( json );
+            });
+
+            $(document).on("click", ".sendMessageButton", function(event){
+                var $btn = $(this).button('loading');
+
+                var form = $btn.closest('form');
+                var raw = form.serializeJSON();
+
+//                var raw = $('#createChatForm').serializeJSON();
+                var object = { message: raw };
+                var json = JSON.stringify(object);
+
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: "{{ path("api_post_message") }}",
+                    data: json,
+                    dataType: "json",
+                    success: function(data, status, xhr){
+                        console.log('flow ' + data);
+                        clearForm(form);
+                        form.find('input[name=content]').val("").focus();
+                        $btn.button('reset');
+//                        $('#chatModal').modal('hide');
+                    },
+                    error: function(xhr, status, errorThrown){
+                        console.log(jQuery.parseJSON(xhr.responseText));
+                        displayFormError(form, xhr.responseJSON);
+                        $btn.button('reset');
+                    }
+                });
+
+                console.log ( json );
+            });
+
+            $(document).on("click", "#inviteUserButton", function(event){
+                var $btn = $(this).button('loading');
+
+
+                var form = $('#inviteUserForm');
+                var raw = form.serializeJSON();
+                var object = { subscribe: raw };
+                var json = JSON.stringify(object);
+
+                console.log('do a thing: ' + json);
+
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: "{{ path("api_post_subscribe") }}",
+                    data: json,
+                    dataType: "json",
+                    success: function(data, status, xhr){
+                        console.log('flow ' + data);
+                        $btn.button('reset');
+                        $('#userModal').modal('hide');
+                    },
+                    error: function(xhr, status, errorThrown){
+                        console.log(jQuery.parseJSON(xhr.responseText));
+                        displayFormError(form, xhr.responseJSON);
+                        $btn.button('reset');
+                    }
+                });
+
+                console.log ( json );
+            });
+        });
     </script>
 
     <script>
+        // This is the io socket connection to get real-time items pushed back to the client.
+        // It currently executes the JS to update the html view with the new data.
         var conn = new ab.Session('ws://localhost:8080',
                 function() {
-                    conn.subscribe('kittensCategory', function(topic, data) {
+                    conn.subscribe('{{ auth }}', function(topic, data) {
                         // This is where you would add the new article to the DOM (beyond the scope of this tutorial)
-                        console.log('New article published to category "' + topic + '" : ' + data.title);
+
+                        console.log('just the data "' + topic + '" : ' + data);
+
+                        var dataJson = jQuery.parseJSON(data);
+
+                        if (dataJson.hasOwnProperty('chat')) {
+                            console.log('New chat "' + topic + '" : ' + data);
+                            addChat(dataJson.chat);
+                        } else if (dataJson.hasOwnProperty('message')) {
+                            addMessage(dataJson.message);
+                            console.log('New message "' + topic + '" : ' + data);
+                        } else if (dataJson.hasOwnProperty('subscribe')) {
+                            addSubscribe(dataJson.subscribe);
+                            console.log('New subscribe "' + topic + '" : ' + data);
+                        }
 
                     });
                 },
@@ -89,11 +310,66 @@
                 {'skipSubprotocolCheck': true}
         );
 
-        function addChat() {
-        $("myTab").append("<a class=\"list-group-item\" href=\"#beef\" role=\"tab\" data-toggle=\"tab\">Beef</a>");
-////            $( "myTab").append( "<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"beef\">Beef</div>");
-//            $( "myTab").append( "<div>boo</div>");
-//
+        function addSubscribe(json) {
+            console.log("adding subscribe");
+            if (!$('#chat_' + json.chat.id + '_tab').length) {
+                // If adding a new chat, ajax will populate all the data restfully
+                addChat(json.chat);
+            } else {
+                // If the subscribe is notifying users of a new user being added to existing chat
+                addSubscribeUser(json);
+            }
+        }
+
+        function addSubscribeUser(json) {
+            var chat = $('#chat_' + json.chat.id + '_tab');
+            chat.find('.messages-heading').append('<span class="label label-info pull-right">' + json.user.username + '</span>');
+        }
+
+        function addMessage(json) {
+            var chat_messages = $('#chat_' + json.chat.id + '_messages');
+            chat_messages.append('<blockquote><p><span class="label label-info">' + json.user.username + '</span> ' + json.content + '</p><footer><cite title="Time"> ' + json.created_at + ' </cite></footer></blockquote>')
+        }
+
+        function addChat(json) {
+            $("#chatTab").append('<li><a href="#chat_' + json.id + '_tab" role="tab" data-toggle="tab" data-chat-id="' + json.id + '">' + json.name + '</a></li>');
+            $("#chatTabContent").append('<div role="tabpanel" class="tab-pane fade" id="chat_' + json.id + '_tab" data-chat-id="' + json.id + '"><div class="panel panel-default"><div class="panel-heading messages-heading"><button type="button" class="btn btn-primary btn-sm addUserButton" data-toggle="modal" data-target="#userModal" data-chat-id="' + json.id + '">Add User</button></div><div class="panel-body" id="chat_' + json.id + '_messages"></div><div class="panel-footer"><form class="form-inline sendMessageForm" role="form"><div class="form-group"><label class="sr-only" for="newmessage_content">Message</label><input type="hidden" name="chat" value="' + json.id + '"><input type="text" name="content" class="form-control" id="newmessage_content" style="width:450px" placeholder="Message"> </div> <button type="button" class="btn btn-primary sendMessageButton" data-loading-text="Sending..." autocomplete="off">Send Message</button></form></div></div></div>');
+
+            // Populate subscribed users via ajax
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: "/app_dev.php/api/subscribes/" + json.id + ".json",
+                dataType: "json",
+                success: function(data, status, xhr){
+                    console.log('flow chat subscribes ' + xhr.responseText);
+                    $.each(xhr.responseJSON.subscribes, function(i,sub) {
+                        addSubscribeUser(sub);
+                    });
+
+                },
+                error: function(xhr, status, errorThrown){
+                    console.log('flow chat subscribes fail: ' + xhr.responseText);
+                }
+            });
+
+            // Populate messages via ajax.
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: "/app_dev.php/api/messages/" + json.id + ".json",
+                dataType: "json",
+                success: function(data, status, xhr){
+                    console.log('flow chat messages ' + xhr.responseText);
+                    $.each(xhr.responseJSON.messages, function(i,mes) {
+                        addMessage(mes);
+                    });
+
+                },
+                error: function(xhr, status, errorThrown){
+                    console.log('flow chat messages fail: ' + xhr.responseText);
+                }
+            });
         }
     </script>
 

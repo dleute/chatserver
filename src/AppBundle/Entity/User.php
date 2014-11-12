@@ -4,10 +4,12 @@ namespace AppBundle\Entity;
 
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Ser;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="fos_user")
+ * @Ser\ExclusionPolicy("all")
  */
 class User extends BaseUser
 {

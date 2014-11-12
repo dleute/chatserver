@@ -3,10 +3,20 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Ser;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="subscribe")
+ * @Ser\ExclusionPolicy("all")
+ *
+ * @UniqueEntity(
+ *     fields={"user", "chat"},
+ *     errorPath="user",
+ *     message="This user is already subscribed to this chat."
+ * )
  */
 class Subscribe
 {
@@ -14,16 +24,20 @@ class Subscribe
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Ser\Expose
      */
     protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="subscribes")
+     * @Ser\Expose
+     * @Assert\NotBlank()
      **/
     protected $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="Chat", inversedBy="subscribes")
+     * @Ser\Expose
      **/
     protected $chat;
 

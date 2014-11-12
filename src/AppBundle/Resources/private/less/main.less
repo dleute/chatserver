@@ -1,6 +1,23 @@
 @import "../../../../../vendor/twbs/bootstrap/less/bootstrap.less";
 @import "../../../../../vendor/fortawesome/font-awesome/less/font-awesome.less";
 
+html, body {
+  height: 100%;
+}
+
+#chatsColumn, #messagesColumn {
+  height: 70%;
+}
+
+#chatsList, #messagesList {
+  height: 100%;
+  overflow-y: scroll;
+}
+
 body {
   margin: 20px;
+}
+
+.form-inline input {
+  width: 100%;
 }

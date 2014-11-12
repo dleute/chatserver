@@ -3,10 +3,16 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Ser;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="chat")
+ * @Ser\ExclusionPolicy("all")
+ *
+ * @UniqueEntity("name")
  */
 class Chat
 {
@@ -14,11 +20,15 @@ class Chat
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Ser\Expose
      */
     protected $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Ser\Expose
+     * @Assert\NotBlank()
+     * @Assert\Length(min = "3")
      */
     protected $name;
 
@@ -31,6 +41,7 @@ class Chat
      * @ORM\OneToMany(targetEntity="Subscribe", mappedBy="chat")
      **/
     protected $subscribes;
+
     /**
      * Constructor
      */

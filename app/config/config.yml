@@ -31,6 +31,8 @@ twig:
     strict_variables: "%kernel.debug%"
     form:
         resources: ['bootstrap_3_horizontal_layout.html.twig']
+#    exception_controller: 'FOS\RestBundle\Serializer\ExceptionWrapperSerializeHandler'
+#    exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
 
 # Assetic Configuration
 assetic:
@@ -52,6 +54,7 @@ assetic:
         chatserver_less:
             inputs:
                 - @AppBundle/Resources/private/less/main.less
+                - %kernel.root_dir%/../components/select2/select2.css
             filters:
                 - lessphp
                 - cssrewrite
@@ -73,6 +76,8 @@ assetic:
                 - %kernel.root_dir%/../vendor/twbs/bootstrap/js/scrollspy.js
                 - %kernel.root_dir%/../vendor/twbs/bootstrap/js/tab.js
                 - %kernel.root_dir%/../vendor/twbs/bootstrap/js/affix.js
+                - @AppBundle/Resources/private/js/jquery.serializejson.min.js
+                - %kernel.root_dir%/../components/select2/select2.js
 #            output: js/bootstrap.js
 
 # Doctrine Configuration
@@ -108,3 +113,27 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: AppBundle\Entity\User
+
+fos_rest:
+    routing_loader:
+        default_format: json
+    param_fetcher_listener: 'force'
+    body_listener:
+        decoders:
+            json: fos_rest.decoder.jsontoform
+    format_listener: true
+    view:
+        view_response_listener: 'force'
+#        exception_wrapper_handler: 'FOS\RestBundle\Serializer\ExceptionWrapperSerializeHandler'
+
+jms_serializer:
+    metadata:
+        auto_detection: true
+        directories:
+            FOSUserBundle:
+                namespace_prefix: "FOS\\UserBundle"
+                path: "@AppBundle/Resources/config/serializer/fos"
+
+
+#sensio_framework_extra:
+#    request: { converters: true }

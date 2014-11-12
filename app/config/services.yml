@@ -8,3 +8,10 @@ services:
         class: AppBundle\Service\ChatServer
 #        arguments:
 #            - @doctrine.orm.default_entity_manager
+
+    push_listener:
+        class: AppBundle\Service\ModelPushListener
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }
+        arguments:
+            - @jms_serializer
