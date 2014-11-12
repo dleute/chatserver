@@ -6,7 +6,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use AppBundle\Entity\Chat;
 use AppBundle\Entity\Message;
 use AppBundle\Entity\Subscribe;
-use AppBundle\Service\ChatPusher;
 use \ZMQContext;
 use \ZMQ;
 use JMS\Serializer\SerializerInterface;
@@ -40,20 +39,23 @@ class ModelPushListener
         }
     }
 
-    private function getMessage($entity) {
+    public function getMessage($entity) {
         $usernames = array();
         $content = null;
         $chat = null;
+        $type = null;
 
 
         if ($entity instanceof Message) {
             $content = array("message" => $entity);
             $chat = $entity->getChat();
+            $type = "message";
         }
 
         if ($entity instanceof Subscribe) {
             $content = array("subscribe" => $entity);
             $chat = $entity->getChat();
+            $type = "subscribe";
         }
 
         if ($chat) {
@@ -63,7 +65,7 @@ class ModelPushListener
                 $usernames[] = $s->getUser()->getUsername();
             }
 
-            $message = array("broadcast" => "message", "content" => $this->serializer->serialize($content, "json"), "usernames" => $usernames);
+            $message = array("broadcast" => $type, "content" => $this->serializer->serialize($content, "json"), "usernames" => $usernames);
 
             return $message;
         } else {

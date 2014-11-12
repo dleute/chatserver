@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace AppBundle\Tests\Service;
 
 use AppBundle\Entity\Chat;
