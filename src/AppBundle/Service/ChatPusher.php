@@ -11,7 +11,7 @@ class ChatPusher implements WampServerInterface
     protected $subscribed = array();
 
     public function onSubscribe(ConnectionInterface $conn, $topic) {
-        echo "subscribed " . $topic->getId() . "\n";
+//        echo "subscribed " . $topic->getId() . "\n";
 
         // Clients subscribe with their session cookie which was authorized by the rest server for username
         $username = null;
@@ -26,17 +26,17 @@ class ChatPusher implements WampServerInterface
 
     public function onUnSubscribe(ConnectionInterface $conn, $topic)
     {
-        echo "unsubscribe\n";
+//        echo "unsubscribe\n";
     }
 
     public function onOpen(ConnectionInterface $conn)
     {
-        echo "opened\n";
+//        echo "opened\n";
     }
 
     public function onClose(ConnectionInterface $conn)
     {
-        echo "closed\n";
+//        echo "closed\n";
     }
 
     public function onCall(ConnectionInterface $conn, $id, $topic, array $params)
@@ -64,42 +64,48 @@ class ChatPusher implements WampServerInterface
     public function onMessage($entry)
     {
         $entryData = json_decode($entry, true);
-        print_r($entryData);
+//        print_r($entryData);
+        $content = null;
 
-        if (isset($entryData["authorize"])) {
-            echo "authorizing " . $entryData["authorize"] . " for " . $entryData["username"] . "\n";
-            $this->authorized[$entryData['authorize']] = $entryData['username'];
-        } else if (isset($entryData["broadcast"])) {
-            $usernames = $entryData['usernames'];
+        $topics = $this->getBroadcastTopics($entryData);
+        if (count($topics)) {
             $content = $entryData['content'];
+        }
+
+        /** @var Topic $t */
+        foreach ($topics as $t) {
+            $this->subscribed[$t]->broadcast($content);
+//            echo "pushing to topic " . $t;
+        }
+        
+    }
+
+    /**
+     * @param $data
+     * @return array
+     */
+    public function getBroadcastTopics($data) {
+        if (isset($data["authorize"])) {
+//            echo "authorizing " . $data["authorize"] . " for " . $data["username"] . "\n";
+            $this->authorized[$data['authorize']] = $data['username'];
+        } else if (isset($data["broadcast"])) {
+            $usernames = $data['usernames'];
+            $content = $data['content'];
 
             $topicIds = array();
 
-            $usernames = array_values( $usernames );
+            $usernames = array_values($usernames);
 
-            foreach($usernames as $u) {
-                echo "doing array keys for " . $u . "\n";
+            foreach ($usernames as $u) {
+//                echo "doing array keys for " . $u . "\n";
                 $topicIds = array_merge(array_keys($this->authorized, $u, true), $topicIds);
             }
 
-            print_r($topicIds);
+//            print_r($topicIds);
 
             $topics = array_values($topicIds);
-
-            /** @var Topic $t */
-            foreach ($topics as $t) {
-                $this->subscribed[$t]->broadcast($content);
-                echo "pushing to topic " . $t;
-//                $t->broadcast($content);
-            }
+            return $topics;
         }
+        return array();
     }
-//
-//    public function onNewChat($entry)
-//    {
-//    }
-//
-//    public function onNewSubscribe($entry)
-//    {
-//    }
 }

@@ -28,7 +28,8 @@
         "cboden/ratchet": "0.4.x-dev",
         "react/zmq": "~0.3",
         "ivaynberg/select2": "~3.5",
-        "phpunit/phpunit": "~4.3"
+        "phpunit/phpunit": "~4.3",
+        "doctrine/doctrine-fixtures-bundle": "~2.2"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",

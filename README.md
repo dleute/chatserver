@@ -53,7 +53,7 @@ chatdeploy.allofzero.com is the domain used for live deployment.
 
 For usage and testing a fixtures file is included that creates a few users for you.
 
-COMPLETE THIS
+`./app/console doctrine:fixtures:load` - WARNING: this will destroy the current database and re-populate it
 
 #### Creating users manually
 
