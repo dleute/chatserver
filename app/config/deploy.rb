@@ -58,10 +58,6 @@ after "symfony:composer:get", "fix_permissions"
 
 task :restart_server do
   run "kill -9 $(lsof -i:5555 -t); true"
-#  pid = capture('lsof -t -i:5555')
-#  if pid
-#     run "kill -9 #{pid}"
-#  end
 
   run("(/usr/bin/env nohup #{php_bin} #{current_path}/#{app_path}/console --env=prod chat:server 8080 5555 &) && sleep 1", :pty => true)
 end

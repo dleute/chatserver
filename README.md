@@ -91,7 +91,7 @@ This should be entirely self contained and work once the environment is function
 
 #### Functional Testing
 
-Functional testing is quite a bit more involved. It will require configuring a javascript compatible test driver. Doing all of this is beyond the scope of this document.
+Functional testing is quite a bit more involved. It will require configuring a javascript compatible test driver. Doing all of this is beyond the scope of this document. For
 
 ### Deploy
 
