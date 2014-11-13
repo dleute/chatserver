@@ -23,7 +23,7 @@ Additionally requires these items:
 * Capifony (Ruby gem for capistrano which only works with Capistrano 2 and not 3)
 * capistrano_rsync_with_remote_cache (Ruby gem for rsync copies)
 * Selenium2 for functional testing (included in git)
-* ChromeDriver for Selenium2
+* ChromeDriver for Selenium2 (must be installed by you)
  
 Symfony requirements can be checked via:
 
