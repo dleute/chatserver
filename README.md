@@ -91,7 +91,9 @@ Run the following command to run all unit tests:
 
 `./vendor/phpunit/phpunit/phpunit -c app`
 
-This should be entirely self contained and work once the environment is functional.
+This should be entirely self contained and work once the environment is functional. The tests are located here:
+
+`src/AppBundle/Tests/`
 
 #### Functional Testing
 
@@ -99,9 +101,13 @@ Functional testing is quite a bit more involved. It will require configuring a j
 
 Selenium must be running and can be started with `java -jar src/AppBundle/Resources/private/jar/selenium-server-standalone-2.44.0.jar`
 
-To run the tests execute `./bin/behat`
+To run the tests execute:
 
-If everything is configured correctly, a chrome browser should pop-up, test the site and results should show at the prompt.
+`./bin/behat`
+
+If everything is configured correctly, a chrome browser should pop-up, test the site and results should show at the prompt. The feature files are located here:
+
+`features`
 
 ### Api Docs
 
@@ -111,12 +117,12 @@ To make this easier, once you have the site working you can visit `http://chatse
 
 The easiest place to debug problems is in the example HTML client. Debugging output will happen on any symfony environment that is configured for debug. By default only the dev environment has debugging enabled.
 
-For example if you point your url's at a base app_dev.php, the javascript will include console.log info that is viewable in the browser debug inspector.
+For example if you point your url's at a base app_dev.php, the javascript will include console.log info that is viewable in the browser debug inspector. In addition if the ioserver is launched in the dev environment it will output debug info at the prompt.
 
 ### Deploy
 
 * configure app/config/deploy.rb for your environment (it comes pre-built for the ones above deployed to a different location on the current machine) 
 * run `cap deploy:setup` to get your target server ready (should only need to be done once)
-* run `cap deploy` to push your app to the servers
+* run `cap deploy` to push your app to the servers. It will restart the socket server for you.
 
 These tasks are highly tuned toward the target server. They will need adjusting to deploy to a different distribution or environment.

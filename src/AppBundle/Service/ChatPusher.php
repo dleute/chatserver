@@ -19,11 +19,11 @@ class ChatPusher implements WampServerInterface
     public function __construct($debug = false) {
         $this->debug = $debug;
 
-        if ($debug) {
-            echo "the debug is " . $debug . " not sure why";
-        } else {
-            echo "the debug is not " . $debug . " not sure why";
-        }
+//        if ($debug) {
+//            echo "the debug is " . $debug . " not sure why";
+//        } else {
+//            echo "the debug is not " . $debug . " not sure why";
+//        }
     }
 
     public function onSubscribe(ConnectionInterface $conn, $topic) {
