@@ -6,8 +6,8 @@ use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
-use Behat\Testwork\Hook\Call\BeforeSuite;
-use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+//use Behat\Behat\;
+//use Behat\Testwork\Hook\Scope\;
 
 
 /**
@@ -29,25 +29,10 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
 
     }
 
-    /**
-     * @BeforeSuite
-     */
-    public static function prepare(BeforeSuiteScope $event)
+    /** @BeforeFeature */
+    public static function prepare()
     {
         exec('php app/console doctrine:fixtures:load --env=test -n');
-
-//        $em = $this->getContainer()->get('doctrine')->getManager();
-//
-//        $loader = new \Doctrine\Common\DataFixtures\Loader();
-//        $loader->addFixture(new \AppBundle\DataFixtures\ORM\LoadUserData());
-//
-//        $purger = new \Doctrine\Common\DataFixtures\Purger\ORMPurger($em);
-//        $executor = new \Doctrine\Common\DataFixtures\Executor\ORMExecutor($em, $purger);
-//        $executor->execute($loader->getFixtures());
-//
-//        echo "do some stuff\n";
-        // prepare system for test suite
-        // before it runs
     }
 
     /**
@@ -55,7 +40,12 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
      */
     public function iWaitForAjaxToFinish2($time)
     {
-        $this->getSession()->wait($time, '(typeof(jQuery)=="undefined" || (0 === jQuery.active && 0 === jQuery(\':animated\').length))');
+        $this->getSession()->wait($time, '(0 === jQuery.active && 0 === jQuery(\':animated\').length)');
+        usleep(300000);
+        $this->getSession()->wait($time, '(0 === jQuery.active && 0 === jQuery(\':animated\').length)');
+//        $this->getSession()->wait($time, '(typeof(jQuery)=="undefined" || (0 === jQuery.active && 0 === jQuery(\':animated\').length))');
+
+
     }
 
     /**
@@ -69,5 +59,15 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
         $this->fillField('password', 'test');
         $this->pressButton('Log In');
     }
+
+    /**
+     * @When I enter :arg1 in :arg2 field
+     */
+    public function iEnterInField($value, $field)
+    {
+        $this->getSession()->getDriver()->setValue('//*[@name="'.$field.'"]', $value);
+//        session->getDriver()->setValue('//*[@id="'.$key.'"]', $value);
+    }
+
 
 }

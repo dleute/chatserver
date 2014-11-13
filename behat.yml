@@ -5,3 +5,11 @@ default:
             base_url: http://chatserver.allofzero.com/app_test.php
             browser_name: chrome
             selenium2: ~
+
+phantomjs:
+    extensions:
+        Behat\Symfony2Extension: ~
+        Behat\MinkExtension:
+            base_url: http://chatserver.allofzero.com/app_test.php
+            selenium2:
+                wd_host: "http://localhost:8643/wd/hub"
