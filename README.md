@@ -20,6 +20,8 @@ The basic requirements are outlined below. Making a compatible server is beyond 
 * Capistrano (Ruby gem)
 * Capifony (Ruby gem for capistrano)
 * capistrano_rsync_with_remote_cache (Ruby gem for rsync copies)
+* Selenium2 for functional testing (included in git)
+* ChromeDriver for Selenium2
  
 Symfony requirements can be checked via:
 
@@ -38,7 +40,7 @@ In this guide composer is installed globally by moving it into the path as `comp
 * Clone this repository - `git clone git@github.com:dleute/chatserver.git myfolder`
 * In that folder Run composer install - `composer install`
 * Setup local hosts file with domain if necessary
-* Setup apache or use the php built-in server
+* Setup apache or use the php built-in server (beyond scope)
 * Copy app/config/parameters.yml.dist to app/config/parameters.yml
 * Edit app/config/parameters.yml for your db systems
 
@@ -65,7 +67,9 @@ The socket server allows clients to connect and get real-time notification of ot
 
 The following command takes 2 ports. Please use these as they are hard coded in some places for now. One port accepts communication from clients (8080) and the other listens for messages from the app server to send to clients (5555).
 
-`./app/console chat:server 8080 5555`
+`./app/console chat:server 8080 5555` - By default this command will launch in the dev environment and enable debugging.
+
+`./app/console chat:server 8080 5555 -e prod` - Will launch in the prod environment with no debugging
 
 #### Try it out
 
@@ -91,7 +95,23 @@ This should be entirely self contained and work once the environment is function
 
 #### Functional Testing
 
-Functional testing is quite a bit more involved. It will require configuring a javascript compatible test driver. Doing all of this is beyond the scope of this document. For
+Functional testing is quite a bit more involved. It will require configuring a javascript compatible test driver. Doing all of this is beyond the scope of this document.
+
+Selenium must be running and can be started with `java -jar src/AppBundle/Resources/private/jar/selenium-server-standalone-2.44.0.jar`
+
+To run the tests execute `./bin/behat`
+
+If everything is configured correctly, a chrome browser should pop-up, test the site and results should show at the prompt.
+
+### Api Docs
+
+To make this easier, once you have the site working you can visit `http://chatserver.allofzero.com/app_dev.php/doc/` to see the restful API.
+
+### Debug
+
+The easiest place to debug problems is in the example HTML client. Debugging output will happen on any symfony environment that is configured for debug. By default only the dev environment has debugging enabled.
+
+For example if you point your url's at a base app_dev.php, the javascript will include console.log info that is viewable in the browser debug inspector.
 
 ### Deploy
 

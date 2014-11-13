@@ -10,3 +10,7 @@ users:
     type: rest  # Required for `RestYamlLoader` to process imported routes
     prefix: /api
     resource: "@AppBundle/Resources/config/rest_routes.yml"
+
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /doc

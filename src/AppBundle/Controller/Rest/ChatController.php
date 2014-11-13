@@ -14,6 +14,7 @@ use AppBundle\Entity\Chat;
 use AppBundle\Form\ChatType;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 //use FOS\RestBundle\Serializer\ExceptionWrapperSerializeHandler
 
@@ -25,8 +26,10 @@ class ChatController extends FOSRestController
 {
 
     /**
-     * Lists all Chat entities.
+     * Lists all Chats.
      * @Rest\View
+     *
+     * @ApiDoc(section = "Chats")
      */
     public function getChatsAction()
     {
@@ -47,11 +50,12 @@ class ChatController extends FOSRestController
     }
 
     /**
-     * Single chat object.
+     * Gets single chat.
      * @param $id integer
      * @return array
-     *
      * @Rest\View
+     *
+     * @ApiDoc(section = "Chats")
      */
     public function getChatAction($id)
     {
@@ -65,220 +69,16 @@ class ChatController extends FOSRestController
     }
 
     /**
+     * Creates a new chat
      * @param Request $request
      * @return Response
      * @Rest\View
+     *
+     * @ApiDoc(section = "Chats")
      */
     public function postChatAction(Request $request)
     {
-//        return $this->processForm(new Chat(), $request);
         return $this->handleView($this->processForm(new Chat(),$request));
-    }
-
-    /**
-     * Creates a new Chat entity.
-     *
-     * @Rest\View("AppBundle:Chat:new.html.twig")
-     */
-//    public function postChatAction(Request $request)
-//    {
-//        $entity = new Chat();
-//        $form = $this->createCreateForm($entity);
-//        $form->handleRequest($request);
-//
-//        if ($form->isValid()) {
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($entity);
-//            $em->flush();
-//
-//            return $this->redirect($this->generateUrl('api_chat_show', array('id' => $entity->getId())));
-//        }
-//
-//        return array(
-//            'entity' => $entity,
-//            'form'   => $form->createView(),
-//        );
-//    }
-
-    /**
-     * Creates a form to create a Chat entity.
-     *
-     * @param Chat $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createCreateForm(Chat $entity)
-    {
-        $form = $this->createForm(new ChatType(), $entity, array(
-            'action' => $this->generateUrl('api_chat_create'),
-            'method' => 'POST',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Create'));
-
-        return $form;
-    }
-
-    /**
-     * Displays a form to create a new Chat entity.
-     *
-     * @Route("/new", name="api_chat_new")
-     * @Method("GET")
-     * @Rest\View()
-     */
-//    public function newAction()
-//    {
-//        $entity = new Chat();
-//        $form   = $this->createCreateForm($entity);
-//
-//        return array(
-//            'entity' => $entity,
-//            'form'   => $form->createView(),
-//        );
-//    }
-
-    /**
-     * Finds and displays a Chat entity.
-     *
-     * @Rest\View()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AppBundle:Chat')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Chat entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-
-    /**
-     * Displays a form to edit an existing Chat entity.
-     *
-     * @Route("/{id}/edit", name="api_chat_edit")
-     * @Method("GET")
-     * @Rest\View()
-     */
-    public function editAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AppBundle:Chat')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Chat entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-
-    /**
-    * Creates a form to edit a Chat entity.
-    *
-    * @param Chat $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Chat $entity)
-    {
-        $form = $this->createForm(new ChatType(), $entity, array(
-            'action' => $this->generateUrl('api_chat_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
-
-        return $form;
-    }
-    /**
-     * Edits an existing Chat entity.
-     *
-     * @Route("/{id}", name="api_chat_update")
-     * @Method("PUT")
-     * @Rest\View("AppBundle:Chat:edit.html.twig")
-     */
-    public function putChatAction(Request $request, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AppBundle:Chat')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Chat entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('api_chat_edit', array('id' => $id)));
-        }
-
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-    /**
-     * Deletes a Chat entity.
-     *
-     * @Route("/{id}", name="api_chat_delete")
-     * @Method("DELETE")
-     */
-    public function deleteChatAction(Request $request, $id)
-    {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('AppBundle:Chat')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Chat entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-        }
-
-        return $this->redirect($this->generateUrl('api_chat'));
-    }
-
-    /**
-     * Creates a form to delete a Chat entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('api_chat_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
     }
 
     /**

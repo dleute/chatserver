@@ -102,7 +102,9 @@
 
         function displayFormError(form,json) {
 
-            console.log('foots balls ' + form + " " + json);
+            {%  if debug %}
+            console.log('function displayFormError');
+            {% endif %}
 
             var formElement = form;
 
@@ -113,21 +115,21 @@
 
             if (json.hasOwnProperty('errors')) {
             $.each(json.errors.children, function(k, v) {
-                console.log( "dorf " + k + " " + v);
                 $.each(v, function(e,ev) {
                     $.each(ev, function(m,me) {
                         var input = formElement.find('[name=' + k + ']');
                         input.after('<p class="help-block">' + me + '</p>');
                         input.parent().parent().addClass('has-error');
-                        console.log(input + " " + k + " foot " + me);
+                        {%  if debug %}
+                        console.log("error for: " + k + " with: " + me);
+                        {% endif %}
                     })
                 });
             });
             }
-//            console.log(json.code + " " + xhr.responseJSON);
+
         }
 
-//        $('#inviteuser_username').select2();
 
         $(function() {
 
@@ -170,7 +172,9 @@
                 url: "{{ path('api_get_chats') }}",
                 dataType: "json",
                 success: function(data, status, xhr){
-                    console.log('flow initial load chats: ' + xhr.responseText);
+                    {% if debug %}
+                    console.log('ajax existing chats: ' + xhr.responseText);
+                    {% endif %}
                     $.each(xhr.responseJSON.chats, function(i,chat) {
                         addChat(chat);
                     });
@@ -178,7 +182,9 @@
 
                 },
                 error: function(xhr, status, errorThrown){
-                    console.log('flow initial load chats failed: ' + xhr.responseText);
+                    {% if debug %}
+                    console.log('ajax existing chats failed: ' + xhr.responseText);
+                    {% endif %}
                 }
             });
 
@@ -198,18 +204,21 @@
                     data: json,
                     dataType: "json",
                     success: function(data, status, xhr){
-                        console.log('flow ' + data);
+                        {% if debug %}
+                        console.log('posted chat: ' + xhr.responseText);
+                        {% endif %}
                         $btn.button('reset');
                         $('#chatModal').modal('hide');
                     },
                     error: function(xhr, status, errorThrown){
-                        console.log(jQuery.parseJSON(xhr.responseText));
+                        {% if debug %}
+                        console.log('post chat failed: ' + xhr.responseText);
+                        {% endif %}
                         displayFormError($('#createChatForm'), xhr.responseJSON);
                         $btn.button('reset');
                     }
                 });
 
-                console.log ( json );
             });
 
             $(document).on("click", ".sendMessageButton", function(event){
@@ -218,7 +227,6 @@
                 var form = $btn.closest('form');
                 var raw = form.serializeJSON();
 
-//                var raw = $('#createChatForm').serializeJSON();
                 var object = { message: raw };
                 var json = JSON.stringify(object);
 
@@ -229,32 +237,30 @@
                     data: json,
                     dataType: "json",
                     success: function(data, status, xhr){
-                        console.log('flow ' + data);
+                        {% if debug %}
+                        console.log('posted message: ' + xhr.responseText);
+                        {% endif %}
                         clearForm(form);
                         form.find('input[name=content]').val("").focus();
                         $btn.button('reset');
-//                        $('#chatModal').modal('hide');
                     },
                     error: function(xhr, status, errorThrown){
-                        console.log(jQuery.parseJSON(xhr.responseText));
+                        {% if debug %}
+                        console.log('post message failed: ' + xhr.responseText);
+                        {% endif %}
                         displayFormError(form, xhr.responseJSON);
                         $btn.button('reset');
                     }
                 });
 
-                console.log ( json );
             });
 
             $(document).on("click", "#inviteUserButton", function(event){
                 var $btn = $(this).button('loading');
-
-
                 var form = $('#inviteUserForm');
                 var raw = form.serializeJSON();
                 var object = { subscribe: raw };
                 var json = JSON.stringify(object);
-
-                console.log('do a thing: ' + json);
 
                 $.ajax({
                     type: "POST",
@@ -263,18 +269,21 @@
                     data: json,
                     dataType: "json",
                     success: function(data, status, xhr){
-                        console.log('flow ' + data);
+                        {% if debug %}
+                        console.log('invited user: ' + xhr.responseText);
+                        {% endif %}
                         $btn.button('reset');
                         $('#userModal').modal('hide');
                     },
                     error: function(xhr, status, errorThrown){
-                        console.log(jQuery.parseJSON(xhr.responseText));
+                        {% if debug %}
+                        console.log('invite user failed: ' + xhr.responseText);
+                        {% endif %}
                         displayFormError(form, xhr.responseJSON);
                         $btn.button('reset');
                     }
                 });
 
-                console.log ( json );
             });
         });
     </script>
@@ -287,19 +296,25 @@
                     conn.subscribe('{{ auth }}', function(topic, data) {
                         // This is where you would add the new article to the DOM (beyond the scope of this tutorial)
 
-                        console.log('just the data "' + topic + '" : ' + data);
-
                         var dataJson = jQuery.parseJSON(data);
 
                         if (dataJson.hasOwnProperty('chat')) {
-                            console.log('New chat "' + topic + '" : ' + data);
+                            {% if debug %}
+                            console.log('New chat notification: ' + data);
+                            {% endif %}
                             addChat(dataJson.chat);
                         } else if (dataJson.hasOwnProperty('message')) {
+                            {% if debug %}
+                            console.log('New message notification: ' + data);
+                            {% endif %}
                             addMessage(dataJson.message);
-                            console.log('New message "' + topic + '" : ' + data);
+
                         } else if (dataJson.hasOwnProperty('subscribe')) {
+                            {% if debug %}
+                            console.log('New subscribe notification: ' + data);
+                            {% endif %}
                             addSubscribe(dataJson.subscribe);
-                            console.log('New subscribe "' + topic + '" : ' + data);
+
                         }
 
                     });
@@ -311,7 +326,9 @@
         );
 
         function addSubscribe(json) {
+            {% if debug %}
             console.log("adding subscribe");
+            {% endif %}
             if (!$('#chat_' + json.chat.id + '_tab').length) {
                 // If adding a new chat, ajax will populate all the data restfully
                 addChat(json.chat);
@@ -322,11 +339,17 @@
         }
 
         function addSubscribeUser(json) {
+            {% if debug %}
+            console.log("adding subscribe user");
+            {% endif %}
             var chat = $('#chat_' + json.chat.id + '_tab');
             chat.find('.messages-heading').append('<span class="label label-info pull-right">' + json.user.username + '</span>');
         }
 
         function addMessage(json) {
+            {% if debug %}
+            console.log("adding message");
+            {% endif %}
             var chat_messages = $('#chat_' + json.chat.id + '_messages');
             chat_messages.append('<blockquote><p><span class="label label-info">' + json.user.username + '</span> ' + json.content + '</p><footer><cite title="Time"> ' + json.created_at + ' </cite></footer></blockquote>')
         }
@@ -342,14 +365,19 @@
                 url: "{{ base_url }}api/subscribes/" + json.id + ".json",
                 dataType: "json",
                 success: function(data, status, xhr){
-                    console.log('flow chat subscribes ' + xhr.responseText);
+                    {% if debug %}
+                    console.log('new chat get subscribes ' + xhr.responseText);
+                    {% endif %}
                     $.each(xhr.responseJSON.subscribes, function(i,sub) {
                         addSubscribeUser(sub);
                     });
 
                 },
                 error: function(xhr, status, errorThrown){
-                    console.log('flow chat subscribes fail: ' + xhr.responseText);
+                    {% if debug %}
+                    console.log('new chat get subscribes fail: ' + xhr.responseText);
+                    {% endif %}
+
                 }
             });
 
@@ -360,14 +388,18 @@
                 url: "{{ base_url }}api/messages/" + json.id + ".json",
                 dataType: "json",
                 success: function(data, status, xhr){
-                    console.log('flow chat messages ' + xhr.responseText);
+                    {% if debug %}
+                    console.log('new chat get messages: ' + xhr.responseText);
+                    {% endif %}
                     $.each(xhr.responseJSON.messages, function(i,mes) {
                         addMessage(mes);
                     });
 
                 },
                 error: function(xhr, status, errorThrown){
-                    console.log('flow chat messages fail: ' + xhr.responseText);
+                    {% if debug %}
+                    console.log('new chat get messages fail: ' + xhr.responseText);
+                    {% endif %}
                 }
             });
         }

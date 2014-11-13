@@ -9,21 +9,28 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use \ZMQContext;
 use \ZMQ;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class DefaultController extends Controller
 {
     /**
+     * Welcome Page
      * @Route("/", name="home")
      * @Template()
+     *
+     * @ApiDoc(section = "HTML Client")
      */
-    public function indexAction($name = "Derrek")
+    public function indexAction()
     {
-        return array('name' => $name);
+        return array();
     }
 
     /**
+     * Provides HTML based chat client
      * @Route("/chats", name="chats")
      * @Template()
+     *
+     * @ApiDoc(section = "HTML Client")
      *
      * Provides the basic single page html that gets all data restfully.
      */
@@ -47,6 +54,8 @@ class DefaultController extends Controller
 
         $environment = $this->get('kernel')->getEnvironment();
 
+        $debug = $this->get('kernel')->isDebug();
+
         // This is a cheap hack to not need javascript based routing.
         // Since this is currently a single page app it wasn't worth the effort.
         $base_url = null;
@@ -56,6 +65,6 @@ class DefaultController extends Controller
             $base_url = "/" . "app_" . $environment . ".php/";
         }
 
-        return array('auth' => $auth, 'users' => $entities, 'base_url' => $base_url);
+        return array('auth' => $auth, 'users' => $entities, 'base_url' => $base_url, 'debug' => $debug);
     }
 }

@@ -134,6 +134,8 @@ jms_serializer:
                 namespace_prefix: "FOS\\UserBundle"
                 path: "@AppBundle/Resources/config/serializer/fos"
 
+nelmio_api_doc: ~
+
 
 #sensio_framework_extra:
 #    request: { converters: true }

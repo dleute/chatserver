@@ -5,9 +5,9 @@ parameters:
 
 services:
     chatserver:
-        class: AppBundle\Service\ChatServer
-#        arguments:
-#            - @doctrine.orm.default_entity_manager
+        class: AppBundle\Service\ChatPusher
+        arguments:
+            - "%kernel.debug%"
 
     push_listener:
         class: AppBundle\Service\ModelPushListener

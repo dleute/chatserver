@@ -14,6 +14,7 @@ use AppBundle\Entity\Message;
 use AppBundle\Form\MessageType;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 //use FOS\RestBundle\Serializer\ExceptionWrapperSerializeHandler
 
@@ -25,11 +26,12 @@ class MessageController extends FOSRestController
 {
 
     /**
-     * Lists all Subscribe entities for a chat.
+     * Lists all messages in a chat.
      * @param $chat_id integer
      * @return array
-     *
      * @Rest\View
+     *
+     * @ApiDoc(section = "Messages")
      */
     public function getMessagesAction($chat_id)
     {
@@ -43,27 +45,12 @@ class MessageController extends FOSRestController
     }
 
     /**
-     * Single chat object.
-     * @param $id integer
-     * @return array
-     *
-     * @Rest\View
-     */
-//    public function getSubscribeAction($id)
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $entity = $em->getRepository('AppBundle:Subscribe')->find($id);
-//
-//        return array(
-//            'subscribe' => $entity,
-//        );
-//    }
-
-    /**
+     * Adds a message to a chat.
      * @param Request $request
      * @return Response
      * @Rest\View
+     *
+     * @ApiDoc(section = "Messages")
      */
     public function postMessageAction(Request $request)
     {

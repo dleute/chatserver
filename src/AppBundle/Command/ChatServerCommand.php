@@ -45,7 +45,9 @@ class ChatServerCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $loop   = Factory::create();
-        $pusher = new ChatPusher();
+
+        $pusher = $this->getContainer()->get('chatserver');
+//        $pusher = new ChatPusher();
 
         $client_port = $input->getArgument('client-port');
         $push_port = $input->getArgument('push-port');

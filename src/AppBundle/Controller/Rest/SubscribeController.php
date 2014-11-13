@@ -13,8 +13,7 @@ use AppBundle\Entity\Subscribe;
 use AppBundle\Form\SubscribeType;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
-
-//use FOS\RestBundle\Serializer\ExceptionWrapperSerializeHandler
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
  * Subscribe controller.
@@ -24,11 +23,12 @@ class SubscribeController extends FOSRestController
 {
 
     /**
-     * Lists all Subscribe entities for a chat.
+     * Lists all subscribers to a chat.
      * @param $id integer
      * @return array
-     *
      * @Rest\View
+     *
+     * @ApiDoc(section = "Subscribers")
      */
     public function getSubscribesAction($id)
     {
@@ -42,27 +42,12 @@ class SubscribeController extends FOSRestController
     }
 
     /**
-     * Single subscribe object.
-     * @param $id integer
-     * @return array
-     *
-     * @Rest\View
-     */
-//    public function getSubscribeAction($id)
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $entity = $em->getRepository('AppBundle:Subscribe')->find($id);
-//
-//        return array(
-//            'subscribe' => $entity,
-//        );
-//    }
-
-    /**
+     * Subscribe a user to a chat
      * @param Request $request
      * @return Response
      * @Rest\View
+     *
+     * @ApiDoc(section = "Subscribers")
      */
     public function postSubscribeAction(Request $request)
     {
@@ -83,8 +68,6 @@ class SubscribeController extends FOSRestController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-
-//            $subscribe->setUser($this->getUser());
 
             // Persists the data to the database
             $em->persist($subscribe);
