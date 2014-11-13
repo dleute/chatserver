@@ -11,14 +11,14 @@ The basic requirements are outlined below. Making a compatible server is beyond 
 * Symfony >= 2.6-Beta
 * ZeroMQ system library (for real-time socket based messages)
 * ZeroMQ php library (installable via pecl)
-* MySQL or Sqlite for DB (depends on the environment)
+* MySQL or Sqlite for DB (depends on the environment, sqlite is not configured by default)
 * PHP composer
 
 #### Dev/Deployment
 
 * Ruby (tested with 2.1+)
 * Capistrano (Ruby gem)
-* Capifony (Ruby gem for capistrano)
+* Capifony (Ruby gem for capistrano which only works with Capistrano 2 and not 3)
 * capistrano_rsync_with_remote_cache (Ruby gem for rsync copies)
 * Selenium2 for functional testing (included in git)
 * ChromeDriver for Selenium2
@@ -42,7 +42,7 @@ In this guide composer is installed globally by moving it into the path as `comp
 * Setup local hosts file with domain if necessary
 * Setup apache or use the php built-in server (beyond scope)
 * Copy app/config/parameters.yml.dist to app/config/parameters.yml
-* Edit app/config/parameters.yml for your db systems
+* Edit app/config/parameters.yml for your db systems (composer may prompt you for this)
 
 ### Usage
 
@@ -126,3 +126,6 @@ For example if you point your url's at a base app_dev.php, the javascript will i
 * run `cap deploy` to push your app to the servers. It will restart the socket server for you.
 
 These tasks are highly tuned toward the target server. They will need adjusting to deploy to a different distribution or environment.
+
+### Summary
+

@@ -65,4 +65,4 @@ end
 after "deploy:create_symlink", "restart_server"
 
 # Be more verbose by uncommenting the following line
-logger.level = Logger::MAX_LEVEL
+# logger.level = Logger::MAX_LEVEL
