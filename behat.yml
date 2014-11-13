@@ -1,0 +1,5 @@
+default:
+    extensions:
+        Behat\MinkExtension:
+            browser_name: chrome
+            selenium2: ~
