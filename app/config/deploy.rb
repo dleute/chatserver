@@ -2,25 +2,28 @@ set :application, "chatserver"
 set :domain,      "chatdeploy.allofzero.com"
 set :deploy_to,   "/Users/dleute/Documents/IBM/chatdeploy"
 set :app_path,    "app"
+set :web_path,    "web"
+set :php_bin,     "/opt/local/bin/php"
+set :user,        "dleute"
 
 set :branch, "develop"
 set   :scm,           :git
 set   :repository,    "file:///Users/dleute/Documents/IBM/chatserver"
-set :deploy_via, :rsync_with_remote_cache
 
 set :copy_vendors, true
-set :use_composer, false
+set :use_composer, true
 set :update_vendors, false
 
 set :writable_dirs,     ["app/cache", "app/logs"]
 set :permission_method, :chown
+set :set_permissions, false
+set :webserver_user,  "_www"
 
-#set   :deploy_via,    :copy
-# Or: `accurev`, `bzr`, `cvs`, `darcs`, `subversion`, `mercurial`, `perforce`, or `none`
+set   :deploy_via,    :rsync_with_remote_cache
 
 set :model_manager, "doctrine"
-#set :shared_files,      ["app/config/parameters.yml"]
-#set :shared_children,     [app_path + "/logs", web_path + "/uploads", "vendor"]
+set :shared_files,      ["app/config/parameters.yml"]
+set :shared_children,   [app_path + "/logs", web_path + "/uploads"]
 
 # Or: `propel`
 
@@ -30,5 +33,32 @@ role :app,        domain, :primary => true       # This may be the same as your 
 set   :use_sudo,      false
 set  :keep_releases,  3
 
+task :upload_parameters do
+  origin_file = "app/config/parameters.yml"
+  destination_file = shared_path + "/app/config/parameters.yml" # Notice the
+  shared_path
+
+  try_sudo "mkdir -p #{File.dirname(destination_file)}"
+  top.upload(origin_file, destination_file)
+end
+
+after "deploy:setup", "upload_parameters"
+
+task :fix_permissions do
+  run "#{try_sudo} chmod -R +a \"#{user} allow delete,write,append,file_inherit,directory_inherit\" #{current_path}/#{app_path}/cache #{release_path}/#{app_path}/logs"
+  run "#{try_sudo} chmod -R +a \"#{webserver_user} allow delete,write,append,file_inherit,directory_inherit\" #{current_path}/#{app_path}/cache #{release_path}/#{app_path}/logs"
+  run "#{try_sudo} chmod -R +a \"#{user} allow delete,write,append,file_inherit,directory_inherit\" #{release_path}/#{app_path}/cache #{release_path}/#{app_path}/logs"
+  run "#{try_sudo} chmod -R +a \"#{webserver_user} allow delete,write,append,file_inherit,directory_inherit\" #{release_path}/#{app_path}/cache #{release_path}/#{app_path}/logs"
+end
+
+after "symfony:composer:get", "fix_permissions"
+
+#task :fix_permissions_again do
+#  run "#{try_sudo} chmod -R +a \"#{user} allow delete,write,append,file_inherit,directory_inherit\" #{app_path}/cache #{app_path}/logs"
+#  run "#{try_sudo} chmod -R +a \"#{webserver_user} allow delete,write,append,file_inherit,directory_inherit\" #{app_path}/cache #{app_path}/logs"
+#end
+
+#after "deploy:create_symlink", "fix_permissions_again"
+
 # Be more verbose by uncommenting the following line
-# logger.level = Logger::MAX_LEVEL
+logger.level = Logger::MAX_LEVEL
