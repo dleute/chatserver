@@ -16,6 +16,8 @@ The basic requirements are outlined below. Making a compatible server is beyond 
 
 #### Dev/Deployment
 
+Additionally requires these items:
+
 * Ruby (tested with 2.1+)
 * Capistrano (Ruby gem)
 * Capifony (Ruby gem for capistrano which only works with Capistrano 2 and not 3)
@@ -47,19 +49,19 @@ In this guide composer is installed globally by moving it into the path as `comp
 ### Usage
 
 chatserver.allofzero.com is the domain used in this example. Please replace with your own domain (or use it in hosts which may be easier)
-chatdeploy.allofzero.com is the domain used for live deployment.
+chatdeploy.allofzero.com is the domain used for live deployment. This is the same system in the included capistrano deploy script.
 
 #### Pre-loading sample data
 
 For usage and testing a fixtures file is included that creates a few users for you.
 
-`./app/console doctrine:fixtures:load` - WARNING: this will destroy the current database and re-populate it
+`./app/console doctrine:fixtures:load` - WARNING: this will destroy the current database and re-populate it for the environment. By default it's the dev environment.
 
 #### Creating users manually
 
 On the system that needs additional users:
 
-`./app/console fos:user:create` and follow the prompts. (be sure to provide the environment if you use different db config)
+`./app/console fos:user:create` and follow the prompts. (be sure to provide the environment with --env= if you use different db config)
 
 #### Running the socket server
 
@@ -89,7 +91,7 @@ Functional testing is used to test the client html interface. This effectively d
 
 Run the following command to run all unit tests:
 
-`./vendor/phpunit/phpunit/phpunit -c app`
+`./bin/phpunit -c app`
 
 This should be entirely self contained and work once the environment is functional. The tests are located here:
 
@@ -127,5 +129,12 @@ For example if you point your url's at a base app_dev.php, the javascript will i
 
 These tasks are highly tuned toward the target server. They will need adjusting to deploy to a different distribution or environment.
 
-### Summary
+### Notes
 
+The io connection itself is secured using a generated auth id. In the real world both the restful/web and io connections would be done over SSL in addition to this kind of security.
+
+The goal was to provide something that works. It is not defensively coded. Meaning errors are not always caught gracefully. This is particularly true of the javascript code.
+
+This readme is designed for someone that has some passing familiarity with Symfony projects. If you have not used Symfony before, I highly recommend reading documentation at www.symfony.com
+
+The same thing applies to Ruby/Capistrano. Building a server that can run fairly standard PHP applications isn't the point of this exercise.
