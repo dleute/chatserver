@@ -56,6 +56,7 @@ chatdeploy.allofzero.com is the domain used for live deployment. This is the sam
 The first time you want to populate your database you need to run:
 
 `./app/console doctrine:database:create` to create the database
+
 `./app/console doctrine:schema:update --force` to update the database structure
 
 For usage and testing a fixtures file is included that creates a few users for you.
