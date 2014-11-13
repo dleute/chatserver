@@ -35,10 +35,6 @@ class DefaultController extends Controller
 
         $entities = $em->getRepository('AppBundle:User')->findAll();
 
-//        $form = $this->createForm(new MessageType(), new Message());
-
-//        $form = new MessageType(new Message());
-
         $auth = md5(uniqid($username, true));
 
         $context = new ZMQContext();
@@ -49,6 +45,17 @@ class DefaultController extends Controller
 
         $socket->send(json_encode($message));
 
-        return array('auth' => $auth, 'users' => $entities);
+        $environment = $this->get('kernel')->getEnvironment();
+
+        // This is a cheap hack to not need javascript based routing.
+        // Since this is currently a single page app it wasn't worth the effort.
+        $base_url = null;
+        if ($environment == "prod") {
+            $base_url = "/";
+        } else {
+            $base_url = "/" . "app_" . $environment . ".php/";
+        }
+
+        return array('auth' => $auth, 'users' => $entities, 'base_url' => $base_url);
     }
 }

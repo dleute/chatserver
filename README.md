@@ -95,6 +95,8 @@ Functional testing is quite a bit more involved. It will require configuring a j
 
 ### Deploy
 
-* configure app/config/deploy.rb for your environment (it comes pre-built for the ones above) 
+* configure app/config/deploy.rb for your environment (it comes pre-built for the ones above deployed to a different location on the current machine) 
 * run `cap deploy:setup` to get your target server ready (should only need to be done once)
 * run `cap deploy` to push your app to the servers
+
+These tasks are highly tuned toward the target server. They will need adjusting to deploy to a different distribution or environment.

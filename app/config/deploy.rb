@@ -45,20 +45,28 @@ end
 after "deploy:setup", "upload_parameters"
 
 task :fix_permissions do
-  run "#{try_sudo} chmod -R +a \"#{user} allow delete,write,append,file_inherit,directory_inherit\" #{current_path}/#{app_path}/cache #{release_path}/#{app_path}/logs"
-  run "#{try_sudo} chmod -R +a \"#{webserver_user} allow delete,write,append,file_inherit,directory_inherit\" #{current_path}/#{app_path}/cache #{release_path}/#{app_path}/logs"
-  run "#{try_sudo} chmod -R +a \"#{user} allow delete,write,append,file_inherit,directory_inherit\" #{release_path}/#{app_path}/cache #{release_path}/#{app_path}/logs"
-  run "#{try_sudo} chmod -R +a \"#{webserver_user} allow delete,write,append,file_inherit,directory_inherit\" #{release_path}/#{app_path}/cache #{release_path}/#{app_path}/logs"
+  run "#{try_sudo} chmod +a \"#{user} allow delete,write,append,file_inherit,directory_inherit\" #{release_path}/#{app_path}/cache #{release_path}/#{app_path}/logs; true"
+  run "#{try_sudo} chmod +a \"#{user} allow delete,write,append,file_inherit,directory_inherit\" #{shared_path}/#{app_path}/logs; true"
+  run "#{try_sudo} chmod +a \"#{webserver_user} allow delete,write,append,file_inherit,directory_inherit\" #{release_path}/#{app_path}/cache #{release_path}/#{app_path}/logs; true"
+  run "#{try_sudo} chmod +a \"#{webserver_user} allow delete,write,append,file_inherit,directory_inherit\" #{shared_path}/#{app_path}/logs; true"
+#  run "#{try_sudo} chmod +a \"#{webserver_user} allow delete,write,append,file_inherit,directory_inherit\" #{current_path}/#{app_path}/cache #{release_path}/#{app_path}/logs"
+#  run "#{try_sudo} chmod +a \"#{user} allow delete,write,append,file_inherit,directory_inherit\" #{release_path}/#{app_path}/cache #{release_path}/#{app_path}/logs"
+#  run "#{try_sudo} chmod +a \"#{webserver_user} allow delete,write,append,file_inherit,directory_inherit\" #{release_path}/#{app_path}/cache #{release_path}/#{app_path}/logs"
 end
 
 after "symfony:composer:get", "fix_permissions"
 
-#task :fix_permissions_again do
-#  run "#{try_sudo} chmod -R +a \"#{user} allow delete,write,append,file_inherit,directory_inherit\" #{app_path}/cache #{app_path}/logs"
-#  run "#{try_sudo} chmod -R +a \"#{webserver_user} allow delete,write,append,file_inherit,directory_inherit\" #{app_path}/cache #{app_path}/logs"
-#end
+task :restart_server do
+  run "kill -9 $(lsof -i:5555 -t); true"
+#  pid = capture('lsof -t -i:5555')
+#  if pid
+#     run "kill -9 #{pid}"
+#  end
 
-#after "deploy:create_symlink", "fix_permissions_again"
+  run("(/usr/bin/env nohup #{php_bin} #{current_path}/#{app_path}/console --env=prod chat:server 8080 5555 &) && sleep 1", :pty => true)
+end
+
+after "deploy:create_symlink", "restart_server"
 
 # Be more verbose by uncommenting the following line
 logger.level = Logger::MAX_LEVEL

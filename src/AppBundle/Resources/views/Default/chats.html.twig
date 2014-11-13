@@ -339,7 +339,7 @@
             $.ajax({
                 type: "GET",
                 contentType: "application/json",
-                url: "/app_dev.php/api/subscribes/" + json.id + ".json",
+                url: "{{ base_url }}api/subscribes/" + json.id + ".json",
                 dataType: "json",
                 success: function(data, status, xhr){
                     console.log('flow chat subscribes ' + xhr.responseText);
@@ -357,7 +357,7 @@
             $.ajax({
                 type: "GET",
                 contentType: "application/json",
-                url: "/app_dev.php/api/messages/" + json.id + ".json",
+                url: "{{ base_url }}api/messages/" + json.id + ".json",
                 dataType: "json",
                 success: function(data, status, xhr){
                     console.log('flow chat messages ' + xhr.responseText);
